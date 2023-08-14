@@ -38,7 +38,7 @@ public enum ItemManagerConfig {
             null, null, 4, 0),
     QUEST_INVENTORY(SColumnUtil.getQuestInventoryDefaultColumns(), false, false, false,
             null, null, 4, 0),
-    QUEST_EDITOR_POOL(SColumnUtil.getQuestEditorPoolDefaultColumns(), false, false, false,
+    QUEST_EDITOR_POOL(SColumnUtil.getQuestEditorPoolDefaultColumns(), true, false, false,
             null, null, 4, 0),
     QUEST_DECK_EDITOR(SColumnUtil.getQuestDeckEditorDefaultColumns(), false, false, false,
             GroupDef.DEFAULT, ColumnDef.CMC, 4, 1),
