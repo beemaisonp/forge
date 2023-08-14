@@ -584,6 +584,24 @@ public class QuestUtil {
         final LobbyPlayer aiPlayer = GamePlayerUtil.createAiPlayer(event.getOpponentName() == null ? event.getTitle() : event.getOpponentName(), event.getProfile());
         starter.add(aiStart.setPlayer(aiPlayer));
 
+        //logic for multi-enemy commander duels
+        if(FModel.getQuest().getDeckConstructionRules() == DeckConstructionRules.Commander
+                && event instanceof QuestEventCommanderDuel && !((QuestEventCommanderDuel) event).getExtraOpponents().isEmpty()) {
+            for (final QuestEventCommanderDuel extraEventDuel: ((QuestEventCommanderDuel) event).getExtraOpponents()) {
+                final RegisteredPlayer aiStartExtra = getRegisteredPlayerByVariant(extraEventDuel.getEventDeck());
+
+                if (useBazaar) {
+                    aiStartExtra.setStartingLife(lifeAI);
+                    aiStartExtra.setCardsOnBattlefield(QuestUtil.getComputerStartingCards(extraEventDuel));
+                }
+
+                final LobbyPlayer aiPlayer2 = GamePlayerUtil.createAiPlayer(
+                        extraEventDuel.getOpponentName() == null ? extraEventDuel.getTitle() : extraEventDuel.getOpponentName(), extraEventDuel.getProfile());
+                starter.add(aiStartExtra.setPlayer(aiPlayer2));
+                //gui.setPlayerAvatar(aiPlayer2, extraEventDuel);
+            }
+        }
+
         final boolean useRandomFoil = FModel.getPreferences().getPrefBoolean(FPref.UI_RANDOM_FOIL);
         for (final RegisteredPlayer rp : starter) {
             rp.setRandomFoil(useRandomFoil);

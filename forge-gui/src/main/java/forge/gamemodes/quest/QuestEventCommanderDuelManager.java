@@ -81,6 +81,32 @@ public class QuestEventCommanderDuelManager implements QuestEventDuelManagerInte
         return commanderDuels;
     }
 
+    public void generateCommanderDuel(final List<QuestEventDuel> duelOpponents, int enemies) {
+        if (enemies < 0 || enemies > 10) {
+            enemies = 1;
+        }
+
+        QuestEventCommanderDuel duelQuartet = (QuestEventCommanderDuel)commanderDuels.get(((int) (commanderDuels.size() * MyRandom.getRandom().nextDouble())));
+        duelOpponents.add(duelQuartet);
+        duelQuartet.setEventDeck(duelQuartet.getDeckProxy().getDeck());
+        modifyDuelForDifficulty(duelQuartet);
+
+        String description = "Randomized match against: " + duelQuartet.getName();
+
+        //generalize this, just for testin
+        for (int i = 0; i < enemies-1; i++) {
+            QuestEventCommanderDuel duelExtras = (QuestEventCommanderDuel) commanderDuels.get(((int) (commanderDuels.size() * MyRandom.getRandom().nextDouble())));
+            duelExtras.setEventDeck(duelExtras.getDeckProxy().getDeck());
+            modifyDuelForDifficulty(duelExtras);
+            description += "; " + duelExtras.getName();
+            duelQuartet.getExtraOpponents().add(duelExtras); // error here, figure out how lists work
+        }
+        duelQuartet.setDescription(description);
+        if (enemies > 1) {
+            duelQuartet.setTitle("" + (enemies+1) + "-Way Duel");
+        }
+    }
+
     /**
      * Composes an ArrayList containing 4 QuestEventDuels composed with Commander variant decks. One duel will have its
      * title replaced as Random.
@@ -89,8 +115,29 @@ public class QuestEventCommanderDuelManager implements QuestEventDuelManagerInte
     public List<QuestEventDuel> generateDuels() {
         final List<QuestEventDuel> duelOpponents = new ArrayList<>();
 
+        /*
+        //generate testing multiopponent duel
+
+        QuestEventCommanderDuel duelQuartet = (QuestEventCommanderDuel)commanderDuels.get(((int) (commanderDuels.size() * MyRandom.getRandom().nextDouble())));
+        duelOpponents.add(duelQuartet);
+        duelQuartet.setEventDeck(duelQuartet.getDeckProxy().getDeck());
+        duelQuartet.setDescription("Ey Im testing here, should be 2 dudes");
+        modifyDuelForDifficulty(duelQuartet);
+
+        //generalize this, just for testin
+        for (i = 0; i < 3; i++) {
+            QuestEventCommanderDuel duel2 = (QuestEventCommanderDuel)commanderDuels.get(((int) (commanderDuels.size() * MyRandom.getRandom().nextDouble())));
+            duel2.setEventDeck(duel2.getDeckProxy().getDeck());
+            modifyDuelForDifficulty(duel2);
+            duelQuartet.getExtraOpponents().add(duel2); // error here, figure out how lists work
+        }
+        */
+
+        generateCommanderDuel(duelOpponents, 3);
+        generateCommanderDuel(duelOpponents, 2);
+
         //While there are less than 4 duels chosen
-        while (duelOpponents.size() < 4) {
+        while (duelOpponents.size() < 6) {
             //Get a random duel from the possible duels list
             QuestEventCommanderDuel duel = (QuestEventCommanderDuel)commanderDuels.get(((int) (commanderDuels.size() * MyRandom.getRandom().nextDouble())));
 
